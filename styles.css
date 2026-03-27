@@ -1,0 +1,277 @@
+/* ============================================================
+   LILY GIFT — styles.css
+   Romantic, premium, dark-background bloom experience
+   ============================================================ */
+
+/* ── Google Fonts loaded in HTML ── */
+
+/* ── CSS Variables ── */
+:root {
+  --bg-0:         #060408;
+  --bg-1:         #0d0618;
+  --bg-2:         #130a2a;
+  --accent-pink:  #e8a0b4;
+  --accent-gold:  #d4a96a;
+  --text-primary: #f5eee8;
+  --text-soft:    #c8b8b0;
+  --glow-color:   rgba(220, 180, 200, 0.18);
+  --glow-strong:  rgba(232, 160, 180, 0.32);
+  --duration-bloom: 1.8s;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: radial-gradient(ellipse at 50% 40%,
+    var(--bg-2) 0%,
+    var(--bg-1) 45%,
+    var(--bg-0) 100%
+  );
+  background-attachment: fixed;
+  font-family: 'Crimson Pro', Georgia, serif;
+  color: var(--text-primary);
+  cursor: default;
+  /* Prevent flash of unstyled content */
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+/* ── Particle Canvas ── */
+#particles {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Ambient glow orb behind the flower ── */
+.glow-orb {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse,
+    rgba(200, 160, 180, 0.15) 0%,
+    rgba(160, 100, 140, 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 1;
+  animation: orbPulse 6s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: translate(-50%, -52%) scale(1);   opacity: 0.7; }
+  50%       { transform: translate(-50%, -52%) scale(1.12); opacity: 1;   }
+}
+
+/* ── Stage (main layout) ── */
+.stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 60px 24px 80px;
+  gap: 0;
+}
+
+/* ── Heading ── */
+.heading {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-12px);
+  margin-bottom: 48px;
+  text-shadow:
+    0 0 30px rgba(220, 180, 200, 0.5),
+    0 0 60px rgba(200, 140, 170, 0.2);
+  /* Triggered by JS adding .visible class */
+  transition: opacity 1.6s ease, transform 1.6s ease;
+}
+
+.heading.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Flower wrapper (for parallax) ── */
+.flower-wrap {
+  position: relative;
+  width: clamp(280px, 40vw, 380px);
+  height: clamp(280px, 40vw, 380px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 52px;
+  /* GPU layer for smooth parallax */
+  will-change: transform;
+}
+
+/* ── SVG lily ── */
+#lily {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  /* Breathing pulse after bloom — toggled by JS */
+  animation: none;
+}
+
+#lily.breathing {
+  animation: breathe 5s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(220,200,210,0.25)) drop-shadow(0 0 25px rgba(200,160,180,0.1)); transform: scale(1); }
+  50%       { filter: drop-shadow(0 0 22px rgba(220,200,210,0.45)) drop-shadow(0 0 50px rgba(200,160,180,0.22)); transform: scale(1.025); }
+}
+
+/* ── Petal bloom animation ── */
+/* Each petal-group starts collapsed (scaleY 0) from its base, then opens */
+.petal-group {
+  transform-origin: 0 0;
+  transform-box: fill-box;
+  /* Initial closed state */
+  opacity: 0;
+  /* JS will add class 'open' with individual delays */
+}
+
+.petal-group.open {
+  animation: petalBloom var(--duration-bloom) cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes petalBloom {
+  0% {
+    opacity: 0;
+    /* Petals start closed: scaled to 0 from base, slightly rotated inward */
+    transform: scaleY(0.05) rotate(calc(var(--rot) * 0.08));
+    filter: brightness(0.3);
+  }
+  20% {
+    opacity: 0.7;
+  }
+  60% {
+    transform: scaleY(1.04) rotate(0deg);
+    filter: brightness(1.08);
+  }
+  80% {
+    transform: scaleY(0.97) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1) rotate(0deg);
+    filter: brightness(1);
+  }
+}
+
+/* ── Center glow fade-in ── */
+#centerGlow {
+  transition: opacity 0.8s ease;
+}
+
+#centerGlow.visible {
+  opacity: 1 !important;
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.8; r: 28; }
+  50%       { opacity: 1;   r: 32; }
+}
+
+/* ── Stamens fade-in ── */
+#stamens {
+  transition: opacity 1.2s ease;
+}
+
+#stamens.visible {
+  opacity: 1 !important;
+}
+
+/* ── Message section ── */
+.message-wrap {
+  max-width: 640px;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 2s ease, transform 2s ease;
+  padding: 0 8px;
+}
+
+.message-wrap.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.message {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-weight: 200;
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.2vw, 1.28rem);
+  line-height: 2;
+  letter-spacing: 0.025em;
+  color: var(--text-soft);
+  text-align: center;
+  /* Soft glow on text */
+  text-shadow: 0 0 20px rgba(200, 160, 180, 0.15);
+  /* Decorative top divider */
+  padding-top: 32px;
+  border-top: 1px solid rgba(200, 160, 180, 0.15);
+}
+
+/* ── Decorative flourish lines beside heading ── */
+.heading::before,
+.heading::after {
+  content: '·  ·  ·';
+  display: block;
+  font-size: 0.55rem;
+  letter-spacing: 0.5em;
+  color: rgba(200, 160, 180, 0.4);
+  margin: 0 auto 10px;
+  text-align: center;
+}
+
+.heading::after {
+  margin: 10px auto 0;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(200, 160, 180, 0.2); border-radius: 2px; }
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .flower-wrap {
+    width: 260px;
+    height: 260px;
+  }
+  .message {
+    font-size: 1rem;
+    line-height: 1.85;
+  }
+}

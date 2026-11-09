@@ -8,9 +8,26 @@
 
 /* ── CSS Variables ── */
 :root {
-  --bg-0:         #050307;
-  --bg-1:         #0c0516;
-  --bg-2:         #1a0d32;
+  /* ACTIVE PALETTE: Rosewood Wine — deep burgundy, warm and romantic */
+  --bg-0:         #0a0307;
+  --bg-1:         #1d0812;
+  --bg-2:         #3b1024;
+  --bg-glow:      rgba(190, 80, 110, 0.24);
+
+  /* Want a different mood? Swap the four lines above with one of these:
+
+     Midnight Navy (calm, starry)
+       --bg-0: #03060f;  --bg-1: #08122a;  --bg-2: #14285a;  --bg-glow: rgba(80, 120, 200, 0.22);
+
+     Deep Emerald (rich, elegant)
+       --bg-0: #020a08;  --bg-1: #071a15;  --bg-2: #0f3a2e;  --bg-glow: rgba(60, 160, 130, 0.22);
+
+     Warm Plum (soft purple)
+       --bg-0: #07030c;  --bg-1: #170a26;  --bg-2: #2e1650;  --bg-glow: rgba(150, 90, 200, 0.24);
+
+     Dusk Teal (fresh, modern)
+       --bg-0: #020809;  --bg-1: #06191d;  --bg-2: #0e3a42;  --bg-glow: rgba(70, 170, 180, 0.22);
+  */
   --accent-pink:  #eab0c2;
   --accent-rose:  #c98aa6;
   --accent-gold:  #dcb87e;
@@ -37,7 +54,7 @@ html, body {
 
 body {
   background:
-    radial-gradient(ellipse 70% 50% at 50% 32%, rgba(120, 70, 130, 0.22) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 50% 32%, var(--bg-glow) 0%, transparent 70%),
     radial-gradient(ellipse at 50% 40%,
       var(--bg-2) 0%,
       var(--bg-1) 48%,

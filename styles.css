@@ -1,21 +1,24 @@
 /* ============================================================
    LILY GIFT — styles.css
    Romantic, premium, dark-background bloom experience
+   (refined: richer palette, film grain, vignette, glass message card)
    ============================================================ */
 
 /* ── Google Fonts loaded in HTML ── */
 
 /* ── CSS Variables ── */
 :root {
-  --bg-0:         #060408;
-  --bg-1:         #0d0618;
-  --bg-2:         #130a2a;
-  --accent-pink:  #e8a0b4;
-  --accent-gold:  #d4a96a;
-  --text-primary: #f5eee8;
-  --text-soft:    #c8b8b0;
+  --bg-0:         #050307;
+  --bg-1:         #0c0516;
+  --bg-2:         #1a0d32;
+  --accent-pink:  #eab0c2;
+  --accent-rose:  #c98aa6;
+  --accent-gold:  #dcb87e;
+  --text-primary: #f8f0ea;
+  --text-soft:    #d6c6c0;
   --glow-color:   rgba(220, 180, 200, 0.18);
   --glow-strong:  rgba(232, 160, 180, 0.32);
+  --hairline:     rgba(220, 184, 126, 0.28);
   --duration-bloom: 1.8s;
 }
 
@@ -33,18 +36,44 @@ html, body {
 }
 
 body {
-  background: radial-gradient(ellipse at 50% 40%,
-    var(--bg-2) 0%,
-    var(--bg-1) 45%,
-    var(--bg-0) 100%
-  );
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 32%, rgba(120, 70, 130, 0.22) 0%, transparent 70%),
+    radial-gradient(ellipse at 50% 40%,
+      var(--bg-2) 0%,
+      var(--bg-1) 48%,
+      var(--bg-0) 100%
+    );
   background-attachment: fixed;
   font-family: 'Crimson Pro', Georgia, serif;
   color: var(--text-primary);
   cursor: default;
-  /* Prevent flash of unstyled content */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   opacity: 1;
   transition: opacity 0.4s ease;
+}
+
+/* Soft vignette to frame the scene */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Fine film grain for a tactile, premium feel */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 3;
 }
 
 /* ── Particle Canvas ── */
@@ -63,22 +92,24 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -52%);
-  width: 420px;
-  height: 420px;
+  width: 520px;
+  height: 520px;
   border-radius: 50%;
   background: radial-gradient(ellipse,
-    rgba(200, 160, 180, 0.15) 0%,
-    rgba(160, 100, 140, 0.08) 40%,
-    transparent 70%
+    rgba(214, 170, 190, 0.18) 0%,
+    rgba(170, 110, 150, 0.10) 38%,
+    rgba(220, 184, 126, 0.04) 55%,
+    transparent 72%
   );
+  filter: blur(8px);
   pointer-events: none;
   z-index: 1;
-  animation: orbPulse 6s ease-in-out infinite;
+  animation: orbPulse 7s ease-in-out infinite;
 }
 
 @keyframes orbPulse {
-  0%, 100% { transform: translate(-50%, -52%) scale(1);   opacity: 0.7; }
-  50%       { transform: translate(-50%, -52%) scale(1.12); opacity: 1;   }
+  0%, 100% { transform: translate(-50%, -52%) scale(1);    opacity: 0.7; }
+  50%      { transform: translate(-50%, -52%) scale(1.12); opacity: 1;   }
 }
 
 /* ── Stage (main layout) ── */
@@ -90,7 +121,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 60px 24px 80px;
+  padding: 64px 24px 88px;
   gap: 0;
 }
 
@@ -99,18 +130,23 @@ body {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(1.6rem, 4vw, 2.8rem);
-  letter-spacing: 0.12em;
-  color: var(--text-primary);
+  font-size: clamp(1.8rem, 4.4vw, 3.1rem);
+  letter-spacing: 0.14em;
+  line-height: 1.2;
   text-align: center;
   opacity: 0;
   transform: translateY(-12px);
-  margin-bottom: 48px;
-  text-shadow:
-    0 0 30px rgba(220, 180, 200, 0.5),
-    0 0 60px rgba(200, 140, 170, 0.2);
-  /* Triggered by JS adding .visible class */
-  transition: opacity 1.6s ease, transform 1.6s ease;
+  margin-bottom: 52px;
+
+  /* Soft champagne-to-rose gradient text */
+  background: linear-gradient(180deg, #fff7ee 0%, #f2d9e0 55%, #dcb4c6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 0 22px rgba(220, 170, 195, 0.35));
+
+  transition: opacity 1.8s ease, transform 1.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .heading.visible {
@@ -118,16 +154,31 @@ body {
   transform: translateY(0);
 }
 
+/* ── Decorative ornaments above / below heading ── */
+.heading::before,
+.heading::after {
+  content: '';
+  display: block;
+  width: 84px;
+  height: 1px;
+  margin: 0 auto 18px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  opacity: 0.8;
+}
+
+.heading::after {
+  margin: 18px auto 0;
+}
+
 /* ── Flower wrapper (for parallax) ── */
 .flower-wrap {
   position: relative;
-  width: clamp(280px, 40vw, 380px);
-  height: clamp(280px, 40vw, 380px);
+  width: clamp(290px, 40vw, 400px);
+  height: clamp(290px, 40vw, 400px);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 52px;
-  /* GPU layer for smooth parallax */
+  margin-bottom: 56px;
   will-change: transform;
 }
 
@@ -136,7 +187,6 @@ body {
   width: 100%;
   height: 100%;
   overflow: visible;
-  /* Breathing pulse after bloom — toggled by JS */
   animation: none;
 }
 
@@ -145,18 +195,21 @@ body {
 }
 
 @keyframes breathe {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(220,200,210,0.25)) drop-shadow(0 0 25px rgba(200,160,180,0.1)); transform: scale(1); }
-  50%       { filter: drop-shadow(0 0 22px rgba(220,200,210,0.45)) drop-shadow(0 0 50px rgba(200,160,180,0.22)); transform: scale(1.025); }
+  0%, 100% {
+    filter: drop-shadow(0 0 12px rgba(240, 215, 225, 0.28)) drop-shadow(0 0 30px rgba(210, 160, 190, 0.12));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 24px rgba(240, 215, 225, 0.5)) drop-shadow(0 0 56px rgba(210, 160, 190, 0.26));
+    transform: scale(1.025);
+  }
 }
 
 /* ── Petal bloom animation ── */
-/* Each petal-group starts collapsed (scaleY 0) from its base, then opens */
 .petal-group {
   transform-origin: 0 0;
   transform-box: fill-box;
-  /* Initial closed state */
   opacity: 0;
-  /* JS will add class 'open' with individual delays */
 }
 
 .petal-group.open {
@@ -167,7 +220,6 @@ body {
 @keyframes petalBloom {
   0% {
     opacity: 0;
-    /* Petals start closed: scaled to 0 from base, slightly rotated inward */
     transform: scaleY(0.05) rotate(calc(var(--rot) * 0.08));
     filter: brightness(0.3);
   }
@@ -200,7 +252,7 @@ body {
 
 @keyframes glowPulse {
   0%, 100% { opacity: 0.8; r: 28; }
-  50%       { opacity: 1;   r: 32; }
+  50%      { opacity: 1;   r: 32; }
 }
 
 /* ── Stamens fade-in ── */
@@ -214,11 +266,12 @@ body {
 
 /* ── Message section ── */
 .message-wrap {
-  max-width: 640px;
+  position: relative;
+  max-width: 680px;
   width: 100%;
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 2s ease, transform 2s ease;
+  transform: translateY(18px);
+  transition: opacity 2.2s ease, transform 2.2s cubic-bezier(0.22, 1, 0.36, 1);
   padding: 0 8px;
 }
 
@@ -227,51 +280,71 @@ body {
   transform: translateY(0);
 }
 
+/* Small gold ornament resting on the card's top edge */
+.message-wrap::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--bg-1);
+  border: 1px solid var(--accent-gold);
+  box-shadow: 0 0 14px rgba(220, 184, 126, 0.5);
+  z-index: 2;
+}
+
 .message {
+  position: relative;
   font-family: 'Crimson Pro', Georgia, serif;
-  font-weight: 200;
+  font-weight: 300;
   font-style: italic;
-  font-size: clamp(1.05rem, 2.2vw, 1.28rem);
+  font-size: clamp(1.08rem, 2.2vw, 1.3rem);
   line-height: 2;
-  letter-spacing: 0.025em;
+  letter-spacing: 0.02em;
   color: var(--text-soft);
   text-align: center;
-  /* Soft glow on text */
-  text-shadow: 0 0 20px rgba(200, 160, 180, 0.15);
-  /* Decorative top divider */
-  padding-top: 32px;
-  border-top: 1px solid rgba(200, 160, 180, 0.15);
-}
+  text-wrap: pretty;
+  text-shadow: 0 0 22px rgba(200, 160, 180, 0.18);
 
-/* ── Decorative flourish lines beside heading ── */
-.heading::before,
-.heading::after {
-  content: '·  ·  ·';
-  display: block;
-  font-size: 0.55rem;
-  letter-spacing: 0.5em;
-  color: rgba(200, 160, 180, 0.4);
-  margin: 0 auto 10px;
-  text-align: center;
-}
-
-.heading::after {
-  margin: 10px auto 0;
+  /* Frosted glass card */
+  padding: 44px 40px 40px;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 240, 245, 0.06) 0%, rgba(255, 240, 245, 0.02) 100%);
+  border: 1px solid rgba(220, 184, 126, 0.2);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(200, 160, 180, 0.2); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(200, 160, 180, 0.25); border-radius: 2px; }
+
+::selection {
+  background: rgba(232, 160, 180, 0.3);
+  color: #fff;
+}
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
+  .stage {
+    padding: 48px 18px 64px;
+  }
   .flower-wrap {
     width: 260px;
     height: 260px;
+    margin-bottom: 44px;
   }
   .message {
-    font-size: 1rem;
+    font-size: 1.02rem;
     line-height: 1.85;
+    padding: 36px 22px 32px;
+    border-radius: 18px;
   }
 }
